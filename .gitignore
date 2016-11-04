@@ -1,9 +1,9 @@
-*
+/*
+/*/
 !.gitignore
 !*.py
 !*.md
-!ref-logs/
-!ref-logs/pcd.log
-!pretrain/
-pretrain/*
-!pretrain/*.py
+!results/
+!results/*
+!vis_weight.ipynb
+

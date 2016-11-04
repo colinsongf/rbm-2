@@ -25,6 +25,21 @@ def vis_weights(weights, rows, cols, neuron_shape, output_name=None):
         plt.savefig(output_name)
 
 
+def vis_images(images, rows, cols, image_shape, output_name=None):
+    assert images.shape[-1] == rows * cols
+    f, axarr = plt.subplots(rows, cols)
+    for r in range(rows):
+        for c in range(cols):
+            image_idx = r * cols + c
+            image_map = images[:, image_idx].reshape(image_shape)
+            axarr[r][c].imshow(image_map, cmap='gray')
+            axarr[r][c].set_axis_off()
+    f.subplots_adjust(hspace=0.2, wspace=0.2)
+    if output_name is None:
+        plt.show()
+    else:
+        plt.savefig(output_name)
+
 def conv_output_length(input_length, filter_size, stride, border_mode, dilation=1):
     if input_length is None:
         return None
@@ -54,4 +69,3 @@ def conv_output_shape(input_shape, filter_shape, strides, padding):
     out_height = conv_output_length(input_shape[0], filter_shape[0], strides[0], padding)
     out_width = conv_output_length(input_shape[1], filter_shape[1], strides[1], padding)
     return [out_height, out_width, filter_shape[3]]
-
