@@ -43,8 +43,10 @@ class DBM(object):
 
     def print_network(self):
         print '-----Network Dimensions-----'
-        for rbm in self.rbm_list:
+        for i, rbm in enumerate(self.rbm_list):
             print rbm.vis_shape
+            if i==self.last_conv:
+                print rbm.hid_shape
         print self.rbm_list[-1].hid_shape
         print '----------------------------'
 
@@ -89,7 +91,6 @@ class DBM(object):
         """
         vis_samples_list = self.compute_up(vis)
         recon_samples_list = self.compute_down(vis_samples_list[-1])
-
         for _ in range(k-1):
             recon_samples_list = self.vhv(recon_samples_list[0])
         return vis_samples_list, recon_samples_list
@@ -112,8 +113,8 @@ class DBM(object):
             rbm = self.rbm_list[i]
             energy_vis += tf.reduce_mean(rbm.free_energy(vis_samples))
             energy_recon += tf.reduce_mean(rbm.free_energy(recon_samples))
-
-        cost = energy_vis - energy_recon
+        # regularizer = tf.add_n([tf.nn.l2_loss(l.weights) for l in self.rbm_list])
+        cost = energy_vis - energy_recon #+ 0.1*regularizer
 
         loss = self.l2_loss(vis)
         return loss, cost, recon_samples_list[0]
